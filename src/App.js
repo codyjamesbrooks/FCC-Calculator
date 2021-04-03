@@ -1,6 +1,10 @@
 import React from "react";
 import "./App.css";
 
+import solveMathProblem from "./SolveMathProblem.js";
+
+const operatorRegex = new RegExp("[-*+/]$");
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -11,6 +15,9 @@ class App extends React.Component {
     this.handleClearClick = this.handleClearClick.bind(this);
     this.handleNumberClick = this.handleNumberClick.bind(this);
     this.handleOperatorClick = this.handleOperatorClick.bind(this);
+    this.handleMinusClick = this.handleMinusClick.bind(this);
+    this.handleZeroClick = this.handleZeroClick.bind(this);
+    this.handleDecimalClick = this.handleDecimalClick.bind(this);
   }
 
   handleClearClick() {
@@ -21,10 +28,39 @@ class App extends React.Component {
     });
   }
 
+  handleZeroClick() {
+    let lastEntered = this.state.input.split(" ").slice(-1)[0];
+    const zeroStartEndRegEx = new RegExp("^0$");
+    if (operatorRegex.test(this.state.input)) {
+      this.setState((state) => ({
+        input: state.input + " 0",
+        output: 0,
+      }));
+    } else if (zeroStartEndRegEx.test(lastEntered) === false) {
+      this.setState((state) => ({
+        input: state.input + "0",
+      }));
+    }
+  }
+
+  handleDecimalClick() {
+    let lastEntered = this.state.input.split(" ").slice(-1)[0];
+    if (operatorRegex.test(this.state.input)) {
+      this.setState((state) => ({
+        input: state.input + " 0.",
+      }));
+    } else if (this.state.input === "") {
+      this.setState({ input: "0." });
+    } else if (lastEntered.split(".").length <= 1) {
+      this.setState((state) => ({
+        input: state.input + ".",
+      }));
+    }
+  }
+
   handleNumberClick(number) {
     /* Add the number on to the end of the input String. if the end of
     the input string is an opperator add in a space */
-    const operatorRegex = new RegExp("[-*+/]$");
     operatorRegex.test(this.state.input)
       ? this.setState((state) => ({
           input: state.input + " " + number,
@@ -38,16 +74,36 @@ class App extends React.Component {
 
   handleOperatorClick(operator) {
     /* Append the clicked operator onto the end of the input string. 
-    adding one spaced padding around any operator. conditionally if there is a value in 
-    output, and input is empty */
+    adding one spaced padding around any operator. conditionally the end of input
+    is already an operator we will overwitte said operator with a new one. */
+    let endOfInput = this.state.input.slice(-1);
     if (this.state.output !== 0) {
       this.setState((state) => ({
         input: state.output + " " + operator,
         output: 0,
       }));
+    } else if (operatorRegex.test(endOfInput)) {
+      this.setState((state) => ({
+        input: state.input.replace(/[-+* /]*$/, ` ${operator}`),
+      }));
     } else {
       this.setState((state) => ({
         input: state.input + " " + operator,
+      }));
+    }
+  }
+
+  handleMinusClick() {
+    // For minus we will simply add a minus onto the end of the input.
+    let endOfInput = this.state.input.slice(-3);
+    if (this.state.output !== 0) {
+      this.setState((state) => ({
+        input: state.output + " -",
+        output: 0,
+      }));
+    } else if (endOfInput !== "- -") {
+      this.setState((state) => ({
+        input: state.input + " -",
       }));
     }
   }
@@ -78,14 +134,13 @@ class App extends React.Component {
         <button id="add" onClick={(operator) => this.handleOperatorClick("+")}>
           +
         </button>
-        <button
-          id="minus"
-          onClick={(operator) => this.handleOperatorClick("-")}
-        >
+        <button id="minus" onClick={this.handleMinusClick}>
           -
         </button>
 
-        <button id="decimal">.</button>
+        <button id="decimal" onClick={this.handleDecimalClick}>
+          .
+        </button>
 
         <button id="nine" onClick={(number) => this.handleNumberClick(9)}>
           9
@@ -114,7 +169,9 @@ class App extends React.Component {
         <button id="one" onClick={(number) => this.handleNumberClick(1)}>
           1
         </button>
-        <button id="zero">0</button>
+        <button id="zero" onClick={this.handleZeroClick}>
+          0
+        </button>
       </div>
     );
   }
