@@ -18,6 +18,15 @@ class App extends React.Component {
     this.handleMinusClick = this.handleMinusClick.bind(this);
     this.handleZeroClick = this.handleZeroClick.bind(this);
     this.handleDecimalClick = this.handleDecimalClick.bind(this);
+    this.handleEqualClick = this.handleEqualClick.bind(this);
+  }
+
+  handleEqualClick() {
+    let answer = solveMathProblem(this.state.input);
+    this.setState({
+      input: "",
+      output: answer,
+    });
   }
 
   handleClearClick() {
@@ -117,7 +126,9 @@ class App extends React.Component {
         <button id="clear" onClick={this.handleClearClick}>
           Clear
         </button>
-        <button id="equals">=</button>
+        <button id="equals" onClick={this.handleEqualClick}>
+          =
+        </button>
 
         <button
           id="divide"
