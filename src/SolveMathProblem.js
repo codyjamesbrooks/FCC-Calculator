@@ -9,7 +9,7 @@ const solveMathProblem = (inputString) => {
   // entered numbers, and operators.
   let inputArray = inputString.split(" ");
 
-  // if the final element of the inputArray is an operator, we are going to drop from the array.
+  // if the final element of the inputArray is an operator, drop it from the array.
   if (operatorRegex.test(inputArray.slice(-1)[0])) {
     inputArray = inputArray.slice(0, -1);
   }
