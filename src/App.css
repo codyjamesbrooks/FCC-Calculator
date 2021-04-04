@@ -29,15 +29,23 @@ body {
 
 /* Place the buttons into their grid squares as well as 
   styling for the display and the buttons */
-#display {
+#outer-display-container {
   grid-area: display;
   background-color: white;
   border: 1px solid black;
   border-radius: 4%;
-  text-align: right;
   height: 50px;
-  font-size: 16px;
+  text-align: right;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#inner-display-container {
   padding: 14px 10px;
+  float: right;
+}
+button {
+  font-size: 1.1rem;
+  vertical-align: middle;
 }
 #clear {
   grid-area: clear;
@@ -57,7 +65,7 @@ body {
 #nine {
   grid-area: nine;
 }
-#minus {
+#subtract {
   grid-area: minus;
 }
 #four {

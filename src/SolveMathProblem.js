@@ -62,6 +62,7 @@ const solveMathProblem = (inputString) => {
       solution = +leftNumber - +rightNumber;
     }
   }
+
   return solution;
 };
 
