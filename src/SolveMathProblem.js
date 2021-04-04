@@ -3,49 +3,55 @@ const solveMathProblem = (inputString) => {
     for proper order of operations. First loop we will perform any multiplication or
     division. Second loop over will perform and addition or subtraction. 
   */
+  const operatorRegex = new RegExp("[-*+/]");
 
   // First split the input on spaces. resulting array will hold only
   // entered numbers, and operators.
-  let inputArry = inputString.split(" ");
+  let inputArray = inputString.split(" ");
+
+  // if the final element of the inputArray is an operator, we are going to drop from the array.
+  if (operatorRegex.test(inputArray.slice(-1)[0])) {
+    inputArray = inputArray.slice(0, -1);
+  }
 
   let leftNumber;
   let rightNumber;
   let onlyPlusOrMinus = []; // will hold calculation after '*' and '/' have been computed
   let i = 0;
 
-  while (i < inputArry.length) {
+  while (i < inputArray.length) {
     // if we encounter a '*' we need to take the last number we saw, and multiply
     // it by the next number in the array.
-    if (inputArry[i] === "*") {
+    if (inputArray[i] === "*") {
       leftNumber = onlyPlusOrMinus.slice(-1); // get last seen number
 
       // conditional to allow for the presence of a negating operator.
-      if (inputArry[i + 1] === "-") {
-        rightNumber = inputArry[i + 2] * -1;
+      if (inputArray[i + 1] === "-") {
+        rightNumber = inputArray[i + 2] * -1;
         i += 3;
       } else {
-        rightNumber = inputArry[i + 1];
+        rightNumber = inputArray[i + 1];
         i += 2;
       }
 
       // once we have leftNumber and RigthNumber we can overwrite the end of onlyPlusOrMinus
       // with the resulting multiplication.
       onlyPlusOrMinus.splice(-1, 1, leftNumber * rightNumber);
-    } else if (inputArry[i] === "/") {
+    } else if (inputArray[i] === "/") {
       // Uses same logic as above only divdes the resulting leftNumber and rightNumber
       leftNumber = onlyPlusOrMinus.slice(-1);
-      if (inputArry[i + 1] === "-") {
-        rightNumber = inputArry[i + 2] * -1;
+      if (inputArray[i + 1] === "-") {
+        rightNumber = inputArray[i + 2] * -1;
         i += 3;
       } else {
-        rightNumber = inputArry[i + 1];
+        rightNumber = inputArray[i + 1];
         i += 2;
       }
       onlyPlusOrMinus.splice(-1, 1, leftNumber / rightNumber);
     } else {
       // if the element isn't a '*' or '/' we simlpy push it to onlyPlusOrMinus. This
       // indicates the element is either a number, a '+' or a '-'
-      onlyPlusOrMinus.push(inputArry[i]);
+      onlyPlusOrMinus.push(inputArray[i]);
       i += 1;
     }
   }
